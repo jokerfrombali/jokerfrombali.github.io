@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /miningshop-old/
+Disallow: /miningshop-site-draft/
