@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Все версии сайта MiningShop</title>
+<link rel="icon" href="../miningshop-site-v3/assets/img/ui/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Лента версий сверху вниз, от первой к текущей: у каждой — годы, скриншоты и кнопки, чтобы открыть и сравнить */
+:root{
+  --navy:#0a2342; --navy-2:#0e2e55; --red:#e5133f; --red-grad:linear-gradient(180deg,#ff316e 0%,#e50000 100%);
+  --blue:#006eba; --blue-soft:#e7f2fb; --bg:#f3f5f8; --card:#ffffff; --text:#1c2329; --muted:#5d6b7a; --line:#dfe4ea;
+  --f-head:"Roboto Condensed","Arial Narrow",Arial,sans-serif; --f-body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b1726;--card:#12233a;--text:#e6edf5;--muted:#9fb0c3;--line:#21354f;--blue:#5aa9ec;--blue-soft:#15304f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1726;--card:#12233a;--text:#e6edf5;--muted:#9fb0c3;--line:#21354f;--blue:#5aa9ec;--blue-soft:#15304f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--f-body)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 60%,#004b8d 100%);color:#fff}
+header .wrap{padding-block:40px 44px;display:flex;flex-direction:column;gap:14px}
+.logo{height:34px;width:auto;background:#fff;border-radius:6px;padding:6px 10px;align-self:flex-start}
+h1{font:700 clamp(30px,5vw,48px)/1.05 var(--f-head);text-transform:uppercase;margin:0;text-wrap:balance}
+header p{margin:0;max-width:70ch;color:#c9d7e8;font-size:17px}
+.timeline{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.timeline a{color:#fff;text-decoration:none;font:500 13px var(--f-body);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 12px}
+.timeline a:hover{background:#fff;color:var(--navy)}
+main .wrap{padding-block:36px 60px;display:flex;flex-direction:column;gap:28px}
+.ver{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px}
+.ver.now{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,19,63,.12)}
+.meta{display:flex;flex-direction:column;gap:10px;min-width:0}
+.years{font:700 13px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+h2{font:700 26px/1.15 var(--f-head);text-transform:uppercase;margin:0;text-wrap:balance}
+.meta p{margin:0;color:var(--muted);font-size:15px}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none}
+.facts li{font-size:12.5px;background:var(--blue-soft);color:var(--blue);border-radius:4px;padding:3px 8px;font-variant-numeric:tabular-nums}
+.badge{align-self:flex-start;font:700 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--red-grad);border-radius:4px;padding:3px 8px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.btn{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:6px;text-decoration:none;font:700 13px var(--f-body);text-transform:uppercase;letter-spacing:.03em}
+.btn-main{background:var(--red-grad);color:#fff}
+.btn-line{border:2px solid var(--blue);color:var(--blue)}
+.btn:hover{filter:brightness(1.08)}
+.btn:focus-visible,.timeline a:focus-visible,.shots a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.shots a{display:block;text-decoration:none;color:var(--muted);font-size:12.5px}
+.shots img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:8px;border:1px solid var(--line);background:#fff}
+.shots span{display:block;margin-top:4px}
+.noshot{display:grid;place-items:center;gap:10px;aspect-ratio:16/10;border-radius:8px;border:1px dashed var(--line);background:#fff;padding:16px;text-align:center;color:#5d6b7a;font-size:13px}
+.noshot img{width:180px;height:auto;aspect-ratio:auto;border:0}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--blue);padding:4px 0 4px 12px;margin:0}
+footer .wrap{padding-block:0 40px;color:var(--muted);font-size:13px}
+@media (max-width:860px){.ver{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:460px){.shots{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <img class="logo" src="../miningshop-site-v3/assets/img/ui/logo.webp" alt="MiningShop" width="175" height="34">
+  <h1>Все версии сайта MiningShop</h1>
+  <p>Пять сайтов за девять лет — от первого магазина на OpenCart 2017 года до новой версии под ИИ. Каждую можно открыть и полистать: главная, каталог, карточки товаров с ценами и фото того времени.</p>
+  <nav class="timeline" aria-label="Версии">
+    <a href="#v1">2017–2018 · OpenCart</a><a href="#v2">2019–2025 · Битрикс</a><a href="#v3">2026 · Next.js</a><a href="#v4">сентябрь 2026 · черновик</a><a href="#v5">ноябрь 2026 · v3</a>
+  </nav>
+</div></header>
+
+<main><div class="wrap">
+
+<article class="ver" id="v1">
+  <div class="meta">
+    <div class="years">2017–2018</div>
+    <h2>Первый магазин на OpenCart</h2>
+    <p>Сайт, с которого всё начиналось: фермы под ключ, видеокарты и комплектующие для майнинга Ethereum, первые асики Bitmain.</p>
+    <ul class="facts"><li>566 страниц в архиве</li><li>шаблон «mining»</li><li>адреса без /catalog/</li></ul>
+    <div class="btns">
+      <a class="btn btn-main" href="../miningshop-old/mirror/fermy_dlja_majninga_kriptovaljuty/">Фермы под ключ</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/bitmain/">Асики Bitmain</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/karkas_dlja_majning_fermy/karkas_na_8_kart/">Карточка товара</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/o_nas/">О нас</a>
+    </div>
+    <p class="note">Часть стилей этой версии сохранилась только в веб-архиве и подгружается оттуда — если страница открылась без оформления, обновите её через несколько секунд.</p>
+  </div>
+  <div class="shots">
+    <div class="noshot"><img src="img/v1-logo.png" alt="Логотип MiningShop 2017 года" width="213" height="47">Логотип первой версии. Скриншот не сделать: оформление грузится из веб-архива.</div>
+  </div>
+</article>
+
+<article class="ver" id="v2">
+  <div class="meta">
+    <div class="years">2019 — январь 2026</div>
+    <h2>Магазин на Битриксе (Aspro Next)</h2>
+    <p>Главная версия, на которой был пик 2021 года — 1,18 млн визитов. Фермы на RTX 30-й серии, асики, комплектующие, блог.</p>
+    <ul class="facts"><li>1 751 страница</li><li>1 181 товар с ценами и фото</li><li>восстановлен из веб-архива</li></ul>
+    <div class="btns">
+      <a class="btn btn-main" href="../miningshop-old/mirror/">Главная</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/catalog/fermy_dlya_mayninga/">Фермы</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/catalog/fermy_dlya_mayninga/mayning_fermy_na_nvidia/mayning_ferma_na_videokartakh_nvidia_geforce_rtx_3070/">Ферма на RTX 3070</a>
+      <a class="btn btn-line" href="../miningshop-old/mirror/catalog/asic_maynery/bitmain/">Асики</a>
+      <a class="btn btn-line" href="../miningshop-old/">Все товары списком</a>
+    </div>
+  </div>
+  <div class="shots">
+    <a href="../miningshop-old/mirror/"><img src="img/v2-home.webp" alt="Главная сайта на Битриксе" loading="lazy"><span>Главная</span></a>
+    <a href="../miningshop-old/mirror/catalog/fermy_dlya_mayninga/"><img src="img/v2-prod.webp" alt="Каталог ферм на Битриксе" loading="lazy"><span>Каталог ферм</span></a>
+    <a href="../miningshop-old/mirror/catalog/fermy_dlya_mayninga/mayning_fermy_na_nvidia/mayning_ferma_na_videokartakh_nvidia_geforce_rtx_3070/"><img src="img/v2-card.webp" alt="Карточка фермы на RTX 3070" loading="lazy"><span>Карточка товара</span></a>
+  </div>
+</article>
+
+<article class="ver" id="v3">
+  <div class="meta">
+    <div class="years">январь — сентябрь 2026 · сейчас на miningshop.ru</div>
+    <h2>Биржа асиков на Next.js</h2>
+    <p>Текущий сайт на хостинге: каталог ASIC-майнеров с ценами от поставщиков, сравнение предложений и расчёт доходности.</p>
+    <ul class="facts"><li>58 страниц</li><li>18 асиков с ценами</li><li>копия для просмотра, без скриптов</li></ul>
+    <div class="btns">
+      <a class="btn btn-main" href="2026-nextjs/">Главная</a>
+      <a class="btn btn-line" href="2026-nextjs/catalog/asic_maynery/">Каталог асиков</a>
+      <a class="btn btn-line" href="2026-nextjs/catalog/asic_maynery/bitmain/antminer-s21-200th/">Antminer S21</a>
+    </div>
+  </div>
+  <div class="shots">
+    <a href="2026-nextjs/"><img src="img/v3-home.webp" alt="Главная сайта на Next.js" loading="lazy"><span>Главная</span></a>
+    <a href="2026-nextjs/catalog/asic_maynery/"><img src="img/v3-cat.webp" alt="Каталог асиков на Next.js" loading="lazy"><span>Каталог</span></a>
+    <a href="2026-nextjs/catalog/asic_maynery/bitmain/antminer-s21-200th/"><img src="img/v3-prod.webp" alt="Карточка Antminer S21" loading="lazy"><span>Карточка товара</span></a>
+  </div>
+</article>
+
+<article class="ver" id="v4">
+  <div class="meta">
+    <div class="years">сентябрь 2026 · отложен</div>
+    <h2>Черновик в стиле gekard.ru</h2>
+    <p>Тёмный дизайн с янтарным акцентом: асики с расчётом окупаемости, GPU для ИИ, GPU-серверы, калькулятор доходности.</p>
+    <ul class="facts"><li>81 страница</li><li>26 асиков</li><li>10 ускорителей для ИИ</li></ul>
+    <div class="btns">
+      <a class="btn btn-main" href="../miningshop-site-draft/">Главная</a>
+      <a class="btn btn-line" href="../miningshop-site-draft/catalog/asic_maynery/">Асики</a>
+      <a class="btn btn-line" href="../miningshop-site-draft/catalog/gpu-dlya-ii/">GPU для ИИ</a>
+    </div>
+  </div>
+  <div class="shots">
+    <a href="../miningshop-site-draft/"><img src="img/v4-home.webp" alt="Главная черновика" loading="lazy"><span>Главная</span></a>
+    <a href="../miningshop-site-draft/catalog/asic_maynery/"><img src="img/v4-prod.webp" alt="Каталог асиков в черновике" loading="lazy"><span>Каталог</span></a>
+  </div>
+</article>
+
+<article class="ver now" id="v5">
+  <div class="meta">
+    <span class="badge">Новая</span>
+    <div class="years">ноябрь 2026</div>
+    <h2>Сайт v3: серверы и GPU-фермы для ИИ</h2>
+    <p>Фирменные цвета логотипа, живые фото команды и сборок, серверы для LLM, фермы на видеокартах, выкуп и трейд-ин. Старые адреса ведут на новые страницы.</p>
+    <ul class="facts"><li>163 страницы</li><li>22 видеокарты для ИИ</li><li>1 544 редиректа со старого сайта</li></ul>
+    <div class="btns">
+      <a class="btn btn-main" href="../miningshop-site-v3/">Главная</a>
+      <a class="btn btn-line" href="../miningshop-site-v3/catalog/mayning_fermy/">Фермы</a>
+      <a class="btn btn-line" href="../miningshop-site-v3/catalog/servery-dlya-ii/">Серверы для ИИ</a>
+      <a class="btn btn-line" href="../miningshop-site-v3/karta-sajta/">Карта сайта</a>
+    </div>
+  </div>
+  <div class="shots">
+    <a href="../miningshop-site-v3/"><img src="img/v5-home.webp" alt="Главная сайта v3" loading="lazy"><span>Главная</span></a>
+    <a href="../miningshop-site-v3/catalog/mayning_fermy/"><img src="img/v5-prod.webp" alt="Фермы на видеокартах в v3" loading="lazy"><span>Фермы на видеокартах</span></a>
+  </div>
+</article>
+
+</div></main>
+<footer><div class="wrap">Служебная страница для выбора дизайна. Закрыта от поисковиков: копии старых сайтов не должны попадать в индекс раньше нового miningshop.ru.</div></footer>
+</body>
+</html>

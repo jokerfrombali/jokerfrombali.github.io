@@ -3,3 +3,4 @@ Disallow: /miningshop-old/
 Disallow: /miningshop-site-draft/
 Disallow: /miningshop-structure/
 Disallow: /miningshop-site-v3/
+Disallow: /miningshop-versions/

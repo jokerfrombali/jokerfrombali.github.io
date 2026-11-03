@@ -1,0 +1,119 @@
+RewriteEngine On
+
+# Cloudflare больше не принуждает HTTPS — делаем это сами.
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Канонический хост без www.
+RewriteCond %{HTTP_HOST} ^www\.miningshop\.ru$ [NC]
+RewriteRule ^(.*)$ https://miningshop.ru/$1 [R=301,L]
+
+# Сайт статический: параметры в адресе ничего не меняют, а Яндекс держит в индексе
+# сотни таких дублей от старого Битрикса (?PAGEN_1=, ?clear_cache=, ?recommended_code=,
+# ?oid=, ?__cf_chl_tk=). Уводим на чистый адрес. Рекламные метки не трогаем —
+# иначе Метрика потеряет источник перехода; статику Next.js тоже не трогаем.
+RewriteCond %{QUERY_STRING} .
+RewriteCond %{QUERY_STRING} !(^|&)(utm_[a-z]+|yclid|gclid|_openstat|etext|ysclid)= [NC]
+RewriteCond %{REQUEST_URI} !^/_next/
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{2,5}$
+RewriteRule ^(.*)$ https://miningshop.ru/$1? [R=301,L]
+
+# Адрес каталога без завершающего слеша Apache сам уводил на http://,
+# из-за чего каждый такой переход стоил двух редиректов вместо одного.
+# mod_rewrite отрабатывает раньше mod_dir, поэтому слеш ставим сами и сразу на https.
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{2,5}$
+RewriteRule ^(.*)$ https://miningshop.ru/$1/ [R=301,L]
+
+# Регистр пути на Linux-хостинге значим: бренд в старом sitemap попадался
+# как /Bitmain/, отдавал 404. Уводим на канонический нижний регистр.
+RewriteRule ^catalog/asic_maynery/Bitmain/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/ [R=301,L]
+
+# Эти правила жили в public/_redirects для Cloudflare Pages. На Beget файл
+# не читается, и старые адреса отдавали 404 — переносим в .htaccess.
+RewriteRule ^asic/?$ https://miningshop.ru/catalog/asic_maynery/ [R=301,L]
+
+# Карточки моделей из старой структуры /asic/<модель>. Для трёх слагов есть
+# точное соответствие, остальные уводим в раздел: карточки под них нет.
+RewriteRule ^asic/antminer-s21-pro/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/antminer-s21-pro-234th/ [R=301,L]
+RewriteRule ^asic/antminer-s23-hyd/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/antminer-s23-hydro-580th/ [R=301,L]
+RewriteRule ^asic/antminer-s21-xp-hydro/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/antminer-s21-xp-hydro-473th/ [R=301,L]
+RewriteRule ^asic/antminer[a-z0-9-]*/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/ [R=301,L]
+RewriteRule ^asic/[a-z0-9-]+/?$ https://miningshop.ru/catalog/asic_maynery/ [R=301,L]
+RewriteRule ^ai/gpu/?$ https://miningshop.ru/catalog/videokarty/ [R=301,L]
+RewriteRule ^ai/servers/?$ https://miningshop.ru/services/gpu-hosting/ [R=301,L]
+RewriteRule ^best(/.*)?$ https://miningshop.ru/catalog/asic_maynery/ [R=301,L]
+RewriteRule ^brand/([a-z0-9-]+)/?$ https://miningshop.ru/catalog/asic_maynery/$1/ [R=301,L]
+
+# --- Старый сайт на Битриксе -------------------------------------------------
+# До января 2026 на домене работал магазин на Битриксе: в его картах сайта было
+# 2244 адреса (787 страниц видеокарт, 663 ASIC, 283 комплектующих, 104 статьи
+# блога). После перехода на статический экспорт все они отдают 404, поэтому
+# Вебмастер и выбрасывает их из индекса пачками. Точных соответствий у карточек
+# почти нет — старый каталог состоял из моделей, которых в новом нет, — поэтому
+# уводим на ближайший живой раздел, чтобы не терять вес ссылок и переходы.
+#
+# Если запрошенный путь существует на диске, ни одно правило ниже применяться
+# не должно: иначе живые карточки Bitmain ушли бы на раздел, а разделы — сами
+# на себя, зациклившись.
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [S=15]
+RewriteRule ^catalog/videokarty/.+$ https://miningshop.ru/catalog/videokarty/ [R=301,L]
+RewriteRule ^catalog/asic_maynery/bitmain/bitmain_antminer_s19_pro/?$ https://miningshop.ru/catalog/asic_maynery/bitmain/antminer-s19-pro-110th/ [R=301,L]
+RewriteRule ^catalog/asic_maynery/bitmain/.+$ https://miningshop.ru/catalog/asic_maynery/bitmain/ [R=301,L]
+RewriteRule ^catalog/asic_maynery/.+$ https://miningshop.ru/catalog/asic_maynery/ [R=301,L]
+RewriteRule ^catalog/komplektuyushchie/.+$ https://miningshop.ru/catalog/komplektuyushchie/ [R=301,L]
+RewriteRule ^catalog/(fermy_dlya_mayninga|mayning_fermy)(/.*)?$ https://miningshop.ru/catalog/mayning_fermy/ [R=301,L]
+RewriteRule ^catalog/remont_asikov(/.*)?$ https://miningshop.ru/services/remont-oborudovaniya/ [R=301,L]
+RewriteRule ^catalog/(dopolnitelnye_tovary|dop_tovary_i_uslugi)(/.*)?$ https://miningshop.ru/catalog/komplektuyushchie/ [R=301,L]
+RewriteRule ^(blog|help)(/.*)?$ https://miningshop.ru/knowledge/ [R=301,L]
+RewriteRule ^info(/.*)?$ https://miningshop.ru/catalog/asic_maynery/ [R=301,L]
+RewriteRule ^about/delivery/?$ https://miningshop.ru/company/delivery/ [R=301,L]
+RewriteRule ^about(/.*)?$ https://miningshop.ru/company/about/ [R=301,L]
+RewriteRule ^sale(/.*)?$ https://miningshop.ru/catalog/ [R=301,L]
+RewriteRule ^(personal|order|main)(/.*)?$ https://miningshop.ru/ [R=301,L]
+# Остатки каталога, не попавшие в разделы выше: в старой структуре часть карточек
+# лежала прямо в /catalog/, без подраздела.
+RewriteRule ^catalog/.+$ https://miningshop.ru/catalog/ [R=301,L]
+
+# Next.js на каждый ховер по ссылке просит RSC-полезную нагрузку __next._tree.txt,
+# которой в статическом экспорте нет. Отвечаем пустым 204, чтобы не отдавать
+# на каждый такой запрос всю страницу 404.
+RewriteRule (^|/)__next\._tree\.txt$ - [R=204,L]
+
+# Своя страница 404 вместо серверной заглушки.
+ErrorDocument 404 /404.html
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Статика Next.js с хешем в имени — неизменяема.
+  <FilesMatch "\.(js|css|woff2|woff|ttf)$">
+    ExpiresDefault "access plus 1 year"
+  </FilesMatch>
+  <FilesMatch "\.(webp|png|jpe?g|gif|svg|ico)$">
+    ExpiresDefault "access plus 30 days"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Хешированные ассеты можно держать в кеше вечно.
+  <FilesMatch "\.(js|css|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # HTML обновляется при каждом деплое: короткий кеш с обязательной ревалидацией.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=600, must-revalidate"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Эти два заголовка были в public/_headers для Cloudflare Pages и на Beget не применялись.
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript application/json application/xml image/svg+xml
+</IfModule>
