@@ -4,3 +4,4 @@ Disallow: /miningshop-site-draft/
 Disallow: /miningshop-structure/
 Disallow: /miningshop-site-v3/
 Disallow: /miningshop-versions/
+Disallow: /miningshop-v4/
